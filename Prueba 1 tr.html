@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fast Bite · Carta digital</title>
+<meta name="description" content="Consulta la carta de Fast Bite, personaliza tu pedido y envíalo desde tu mesa.">
+<meta name="theme-color" content="#d62828">
+<link href="https://fonts.googleapis.com/css2?family=Bowlby+One&family=Nunito+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f4f0;--card:#fff;--ink:#1f1a17;--mut:#6d635c;--red:#d62828;--yel:#ffbe0b;--grn:#2d6a4f;--line:#e5dfd8;--onred:#fff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#16120f;--card:#231d19;--ink:#f4efe9;--mut:#b3a79d;--line:#3a312b;--grn:#74c69d}}
+:root[data-theme="dark"]{--bg:#16120f;--card:#231d19;--ink:#f4efe9;--mut:#b3a79d;--line:#3a312b;--grn:#74c69d}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.45 "Nunito Sans",system-ui,sans-serif}
+h1,h2,h3{font-family:"Bowlby One",Impact,sans-serif;font-weight:400;margin:0;letter-spacing:.01em}
+button,select,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--yel);outline-offset:2px}
+header{background:var(--red);color:var(--onred);padding:14px 16px 0;position:sticky;top:0;z-index:5}
+header h1{font-size:26px}
+header p{margin:0 0 10px;font-size:14px;opacity:.9}
+nav{display:flex;gap:6px}
+nav button{flex:1;border:0;background:transparent;color:var(--onred);padding:10px;font-weight:800;border-radius:10px 10px 0 0;opacity:.8}
+nav button[aria-selected=true]{background:var(--bg);color:var(--ink);opacity:1}
+.badge{background:var(--yel);color:#1f1a17;border-radius:99px;padding:0 7px;margin-left:6px;font-size:13px}
+main{max-width:520px;margin:0 auto;padding:14px 14px 110px}
+#kitchen{max-width:1100px}
+.intro{padding:8px 2px 14px}
+.intro h2{font-size:22px}
+.intro p{margin:4px 0 0;color:var(--mut)}
+.section-title{font-size:18px;margin:14px 0 8px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:4px 0 10px}
+.chips button{flex:none;border:2px solid var(--line);background:var(--card);border-radius:99px;padding:6px 14px;font-weight:600}
+.chips button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+#q{width:100%;padding:11px 14px;border:2px solid var(--line);border-radius:12px;background:var(--card);margin-bottom:8px}
+.item{display:grid;grid-template-columns:76px 1fr;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:12px}
+.pic{font-size:44px;display:grid;place-items:center;background:var(--yel);border-radius:12px;height:76px}
+.item h3{font-size:17px}.item p{margin:2px 0 8px;color:var(--mut);font-size:14px}
+.row{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.price{font-weight:800;font-size:18px}
+select{padding:7px 8px;border:2px solid var(--line);border-radius:10px;background:var(--bg);max-width:100%}
+.add{background:var(--red);color:var(--onred);border:0;border-radius:10px;padding:9px 16px;font-weight:800}
+#bar{position:fixed;left:0;right:0;bottom:0;padding:12px 14px calc(12px + env(safe-area-inset-bottom,0px));display:flex;justify-content:center;pointer-events:none}
+#bar button{pointer-events:auto;width:100%;max-width:492px;background:var(--ink);color:var(--bg);border:0;border-radius:14px;padding:14px 18px;font-weight:800;display:flex;justify-content:space-between}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+.panel label{display:block;font-weight:800;margin:10px 0 4px}
+.panel select,.panel input,.panel textarea{width:100%;padding:10px;border:2px solid var(--line);border-radius:10px;background:var(--bg)}
+.ln{display:flex;gap:8px;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line)}
+.ln small{color:var(--mut)}
+.qty{display:flex;gap:6px;align-items:center}
+.qty button{width:30px;height:30px;border-radius:8px;border:2px solid var(--line);background:var(--bg)}
+.rm{background:var(--red);color:var(--onred);border:0;border-radius:8px;padding:6px 10px;font-weight:800}
+.empty{color:var(--mut);text-align:center;padding:30px 10px}
+#orders{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+.cmd{background:var(--card);border:1px solid var(--line);border-left:6px solid var(--red);border-radius:14px;padding:14px}
+.cmd[data-s=Preparando]{border-left-color:var(--yel)}.cmd[data-s=Listo]{border-left-color:var(--grn)}
+.cmd[data-s=Entregado],.cmd[data-s=Cancelado]{opacity:.6;border-left-color:var(--mut)}
+.cmd h3{font-size:19px}.st{font-weight:800;font-size:13px;border-radius:99px;padding:2px 10px;background:var(--red);color:var(--onred)}
+.cmd[data-s=Preparando] .st{background:var(--yel);color:#1f1a17}.cmd[data-s=Listo] .st{background:var(--grn);color:#fff}
+.cmd[data-s=Entregado] .st,.cmd[data-s=Cancelado] .st{background:var(--mut);color:var(--bg)}
+.mesa{display:inline-block;background:var(--ink);color:var(--bg);border-radius:8px;padding:2px 10px;font-weight:800;margin:8px 0}
+.chk{display:flex;gap:8px;align-items:flex-start;padding:6px 0}.chk input{width:20px;height:20px;margin-top:2px}
+.chk.on span{text-decoration:line-through;color:var(--mut)}
+.note{background:var(--yel);color:#1f1a17;border-radius:8px;padding:6px 10px;font-size:14px;margin:6px 0}
+.acts{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.acts button{border:2px solid var(--line);background:var(--bg);border-radius:8px;padding:5px 10px;font-size:13px;font-weight:600}
+#toast{position:fixed;left:50%;top:80px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:12px 20px;border-radius:12px;font-weight:800;z-index:20}
+#modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:grid;place-items:center;z-index:30;padding:16px}
+#modal pre{background:#fff;color:#111;padding:18px;border-radius:6px;font:14px/1.4 "Courier New",monospace;max-width:100%;overflow-x:auto;margin:0 0 10px}
+#modal button{width:100%;padding:11px;border-radius:10px;border:0;background:var(--yel);color:#1f1a17;font-weight:800}
+[hidden]{display:none!important}
+@media (prefers-reduced-motion:no-preference){.cmd{animation:in .3s}@keyframes in{from{transform:scale(.96);opacity:0}}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Fast Bite</h1>
+  <p>Pide desde tu mesa. Tu pedido llega directo a cocina.</p>
+  <nav role="tablist">
+    <button role="tab" id="t-c" aria-selected="true" aria-controls="client">Cliente</button>
+    <button role="tab" id="t-k" aria-selected="false" aria-controls="kitchen">Cocina<span class="badge" id="nb" hidden>0</span></button>
+  </nav>
+</header>
+
+<main id="client">
+  <div id="view-menu">
+    <section class="intro" aria-labelledby="menu-title">
+      <h2 id="menu-title">Carta</h2>
+      <p>Explora los productos, elige tus opciones y agrega lo que quieras pedir.</p>
+    </section>
+    <label class="section-title" for="q">Encuentra algo rico</label>
+    <input id="q" type="search" placeholder="Buscar hamburguesa, papas, refresco…" aria-label="Buscar en la carta">
+    <h3 class="section-title">Categorías</h3>
+    <div class="chips" id="chips" aria-label="Filtrar productos por categoría"></div>
+    <section aria-label="Productos disponibles">
+      <div id="list"></div>
+    </section>
+  </div>
+  <div id="view-cart" hidden>
+    <section class="intro" aria-labelledby="cart-title">
+      <h2 id="cart-title">Tu pedido</h2>
+      <p>Revisa tus productos y los detalles antes de enviarlo.</p>
+    </section>
+    <div class="panel" id="lines"></div>
+    <div class="panel">
+      <label for="ent">Entrega</label>
+      <select id="ent"><option>Mesa del local</option><option>Para llevar</option></select>
+      <div id="mw"><label for="mesa">Número de mesa</label><input id="mesa" type="number" min="1" placeholder="Ej. 6"></div>
+      <label for="nota">Peticiones especiales</label>
+      <textarea id="nota" rows="2" placeholder="Ej. sin cebolla, salsa aparte"></textarea>
+      <div class="row" style="margin-top:14px"><b>Total</b><span class="price" id="tot">$0.00</span></div>
+    </div>
+    <div class="row"><button class="add" id="back" style="background:var(--bg);color:var(--ink);border:2px solid var(--line)">Seguir pidiendo</button><button class="add" id="send">Enviar pedido</button></div>
+  </div>
+</main>
+
+<main id="kitchen" hidden>
+  <section class="intro" aria-labelledby="kitchen-title">
+    <h2 id="kitchen-title">Comandas de cocina</h2>
+    <p>Consulta los pedidos recibidos y actualiza su estado de preparación.</p>
+  </section>
+  <div id="orders"></div>
+</main>
+
+<div id="bar"><button id="cartbtn" hidden><span id="cc">0 productos</span><span id="ct">$0.00</span></button></div>
+<div id="toast" hidden role="status"></div>
+<div id="modal" hidden><div style="width:100%;max-width:340px"><pre id="tk"></pre><button id="mx">Cerrar</button></div></div>
+
+<script>
+var P=[
+{id:1,c:"Hamburguesas",e:"🍔",n:"Clásica",d:"Carne 150 g, queso, lechuga y tomate",p:5.5,o:[["Sencilla",0],["Doble carne",2]]},
+{id:2,c:"Hamburguesas",e:"🥓",n:"Bacon BBQ",d:"Tocino crujiente, cebolla caramelizada y salsa BBQ",p:7.5,o:[["Sencilla",0],["Doble carne",2.5]]},
+{id:3,c:"Hamburguesas",e:"🌶️",n:"Picante Jalapeño",d:"Queso pepper jack, jalapeños y mayo chipotle",p:7,o:[["Sencilla",0],["Doble carne",2.5]]},
+{id:4,c:"Hot dogs",e:"🌭",n:"Hot dog especial",d:"Salchicha, papas hilo, queso y salsas",p:4,o:[["Normal",0],["Jumbo",1.5]]},
+{id:5,c:"Pizza",e:"🍕",n:"Pizza pepperoni",d:"Mozzarella y pepperoni",p:9,o:[["Personal",0],["Mediana",4],["Familiar",8]]},
+{id:6,c:"Pizza",e:"🧀",n:"Pizza margarita",d:"Tomate, mozzarella y albahaca",p:8,o:[["Personal",0],["Mediana",4],["Familiar",8]]},
+{id:7,c:"Pollo",e:"🍗",n:"Alitas",d:"Bañadas en salsa BBQ, búfalo o miel",p:6.5,o:[["BBQ · 6 piezas",0],["Búfalo · 6 piezas",0],["BBQ · 12 piezas",5],["Búfalo · 12 piezas",5]]},
+{id:8,c:"Pollo",e:"🥪",n:"Sándwich de pollo crujiente",d:"Pollo empanizado, pepinillos y mayo",p:6,o:[["Normal",0],["Con queso",1]]},
+{id:9,c:"Papas y combos",e:"🍟",n:"Papas fritas",d:"Crujientes, con sal",p:2.5,o:[["Pequeña",0],["Grande",1.5]]},
+{id:10,c:"Papas y combos",e:"🧅",n:"Aros de cebolla",d:"Empanizados, con salsa ranch",p:3.5,o:[["Porción",0]]},
+{id:11,c:"Papas y combos",e:"🍱",n:"Combo Clásico",d:"Hamburguesa clásica, papas y bebida",p:9,o:[["Refresco",0],["Limonada",.5],["Malteada",2]]},
+{id:12,c:"Bebidas",e:"🥤",n:"Refresco",d:"Cola, naranja o limón",p:1.8,o:[["Cola",0],["Naranja",0],["Limón",0]]},
+{id:13,c:"Bebidas",e:"🍋",n:"Limonada",d:"Natural, con hielo",p:2.2,o:[["Vaso",0],["Jarra",4]]},
+{id:14,c:"Bebidas",e:"🍦",n:"Malteada",d:"Espesa y fría",p:4,o:[["Vainilla",0],["Chocolate",0],["Fresa",0]]}];
+var cats=["Todo"].concat(P.map(function(x){return x.c}).filter(function(v,i,a){return a.indexOf(v)===i}));
+var cat="Todo",term="",cart=[],orders=[],seq=700;
+var $=function(i){return document.getElementById(i)};
+function m(n){return"$"+n.toFixed(2)}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+
+function chips(){$("chips").innerHTML=cats.map(function(c){return'<button aria-pressed="'+(c===cat)+'" data-cat="'+c+'">'+c+'</button>'}).join("")}
+function menu(){
+  var l=P.filter(function(x){return(cat==="Todo"||x.c===cat)&&(x.n+" "+x.d).toLowerCase().indexOf(term)>-1});
+  $("list").innerHTML=l.length?l.map(function(x){
+    return'<div class="item"><div class="pic" aria-hidden="true">'+x.e+'</div><div><h3>'+x.n+'</h3><p>'+x.d+'</p><div class="row"><select id="o'+x.id+'" aria-label="Opción de '+x.n+'">'+
+    x.o.map(function(o,i){return'<option value="'+i+'">'+o[0]+(o[1]?" (+"+m(o[1])+")":"")+'</option>'}).join("")+
+    '</select><span class="price">'+m(x.p)+'</span></div><div style="margin-top:8px;text-align:right"><button class="add" data-add="'+x.id+'">Añadir</button></div></div></div>'}).join(""):'<div class="empty">No hay productos con esa búsqueda. Prueba con otra palabra.</div>';
+}
+function total(){return cart.reduce(function(s,i){return s+i.p*i.q},0)}
+function count(){return cart.reduce(function(s,i){return s+i.q},0)}
+function bar(){var n=count();$("cartbtn").hidden=!n||!$("view-cart").hidden;$("cc").textContent="Ver pedido · "+n+(n===1?" producto":" productos");$("ct").textContent=m(total())}
+function lines(){
+  $("lines").innerHTML=cart.length?cart.map(function(i,k){return'<div class="ln"><div><b>'+i.n+'</b><br><small>'+i.opt+' · '+m(i.p)+'</small></div><div class="qty"><button data-q="'+k+'" data-d="-1" aria-label="Quitar una unidad">−</button><b>'+i.q+'</b><button data-q="'+k+'" data-d="1" aria-label="Añadir una unidad">+</button></div><button class="rm" data-rm="'+k+'">Quitar</button></div>'}).join(""):'<div class="empty">Tu pedido está vacío. Vuelve a la carta y añade algo.</div>';
+  $("tot").textContent=m(total());
+}
+function showCart(on){$("view-menu").hidden=on;$("view-cart").hidden=!on;if(on)lines();bar();scrollTo(0,0)}
+function toast(t){var e=$("toast");e.textContent=t;e.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(function(){e.hidden=true},1800)}
+
+function kitchen(){
+  var nw=orders.filter(function(o){return o.s==="Nuevo"}).length;$("nb").textContent=nw;$("nb").hidden=!nw;
+  $("orders").innerHTML=orders.length?orders.slice().reverse().map(function(o){var oi=orders.indexOf(o);
+    return'<div class="cmd" data-s="'+o.s+'"><div class="row"><h3>CMD #'+o.id+'</h3><span class="st">'+o.s+'</span></div><small style="color:var(--mut)">'+o.t+' · '+o.e+'</small><br><span class="mesa">'+(o.mesa?"Mesa "+esc(o.mesa):"Para llevar")+'</span>'+
+    o.items.map(function(i,k){return'<label class="chk'+(i.done?" on":"")+'"><input type="checkbox" data-chk="'+oi+'-'+k+'"'+(i.done?" checked":"")+'><span>'+i.q+'× '+i.n+' · '+i.opt+'</span></label>'}).join("")+
+    (o.note?'<div class="note">Nota: '+esc(o.note)+'</div>':"")+'<div class="row"><b>Total</b><b>'+m(o.tot)+'</b></div><div class="acts">'+
+    ["Nuevo","Preparando","Listo","Entregado","Cancelado"].map(function(s){return'<button data-st="'+oi+'-'+s+'">'+s+'</button>'}).join("")+
+    '<button data-tk="'+oi+'-k">Ticket cocina</button><button data-tk="'+oi+'-c">Ticket cliente</button></div></div>'}).join(""):'<div class="empty">Aún no hay comandas. Cuando un cliente envíe un pedido, aparecerá aquí.</div>';
+}
+function ticket(o,kind){
+  var w=30,ln=function(a,b){a=String(a);b=String(b);return a+Array(Math.max(1,w-a.length-b.length)+1).join(" ")+b},r=Array(w+1).join("-");
+  var t=["      FAST BITE","  "+(kind==="k"?"TICKET COCINA":"TICKET CLIENTE"),r,"CMD #"+o.id+"  "+o.t,(o.mesa?"Mesa "+o.mesa:"Para llevar"),r];
+  o.items.forEach(function(i){t.push(kind==="k"?i.q+"x "+i.n:ln(i.q+"x "+i.n,m(i.p*i.q)));t.push("   "+i.opt)});
+  if(o.note)t.push(r,"NOTA: "+o.note);
+  t.push(r);if(kind!=="k")t.push(ln("TOTAL",m(o.tot)),"","   ¡Gracias por tu visita!");
+  $("tk").textContent=t.join("\n");$("modal").hidden=false;
+}
+
+document.addEventListener("click",function(e){
+  var b=e.target.closest("button,input");if(!b)return;var d=b.dataset;
+  if(d.cat){cat=d.cat;chips();menu()}
+  else if(d.add){var p=P.filter(function(x){return x.id==d.add})[0],o=p.o[$("o"+p.id).value],pr=p.p+o[1],f=cart.filter(function(i){return i.id===p.id&&i.opt===o[0]})[0];
+    if(f)f.q++;else cart.push({id:p.id,n:p.n,opt:o[0],p:pr,q:1});bar();toast(p.n+" añadido")}
+  else if(d.q){var i=cart[+d.q];i.q+=+d.d;if(i.q<1)cart.splice(+d.q,1);lines();bar()}
+  else if(d.rm){cart.splice(+d.rm,1);lines();bar()}
+  else if(d.chk){var a=d.chk.split("-"),it=orders[a[0]].items[a[1]];it.done=b.checked;var o=orders[a[0]];
+    if(o.items.every(function(x){return x.done})&&o.s!=="Cancelado")o.s="Listo";else if(o.s==="Nuevo"&&o.items.some(function(x){return x.done}))o.s="Preparando";kitchen()}
+  else if(d.st){var a=d.st.split("-");orders[a[0]].s=a[1];kitchen()}
+  else if(d.tk){var a=d.tk.split("-");ticket(orders[a[0]],a[1])}
+});
+$("q").addEventListener("input",function(e){term=e.target.value.toLowerCase().trim();menu()});
+$("cartbtn").onclick=function(){showCart(true)};$("back").onclick=function(){showCart(false)};
+$("ent").onchange=function(){$("mw").hidden=this.value!=="Mesa del local"};
+$("send").onclick=function(){
+  if(!cart.length){toast("Añade al menos un producto");return}
+  var mesa=$("mesa").value,loc=$("ent").value==="Mesa del local";
+  if(loc&&!mesa){toast("Indica tu número de mesa");$("mesa").focus();return}
+  toast("Enviando pedido…");
+  var o={id:seq++,t:new Date().toLocaleTimeString("es",{hour:"2-digit",minute:"2-digit"}),e:loc?"Mesa":"Para llevar",mesa:loc?mesa:"",note:$("nota").value.trim(),s:"Nuevo",tot:total(),items:cart.map(function(i){return{n:i.n,opt:i.opt,q:i.q,p:i.p,done:false}})};
+  setTimeout(function(){orders.push(o);cart=[];$("nota").value="";$("mesa").value="";showCart(false);kitchen();toast("Pedido enviado a cocina")},700);
+};
+$("mx").onclick=function(){$("modal").hidden=true};
+function tab(k){$("t-c").setAttribute("aria-selected",!k);$("t-k").setAttribute("aria-selected",k);$("client").hidden=k;$("kitchen").hidden=!k;$("bar").hidden=k}
+$("t-c").onclick=function(){tab(false)};$("t-k").onclick=function(){tab(true)};
+chips();menu();kitchen();bar();
+</script>
+</body>
+</html>
